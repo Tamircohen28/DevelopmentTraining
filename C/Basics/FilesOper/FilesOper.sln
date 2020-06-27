@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1169
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FilesOper", "FilesOper\FilesOper.vcxproj", "{9E7468D2-CA97-4392-9F06-D6F3C7A37577}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9E7468D2-CA97-4392-9F06-D6F3C7A37577}.Debug|x64.ActiveCfg = Debug|x64
+		{9E7468D2-CA97-4392-9F06-D6F3C7A37577}.Debug|x64.Build.0 = Debug|x64
+		{9E7468D2-CA97-4392-9F06-D6F3C7A37577}.Debug|x86.ActiveCfg = Debug|Win32
+		{9E7468D2-CA97-4392-9F06-D6F3C7A37577}.Debug|x86.Build.0 = Debug|Win32
+		{9E7468D2-CA97-4392-9F06-D6F3C7A37577}.Release|x64.ActiveCfg = Release|x64
+		{9E7468D2-CA97-4392-9F06-D6F3C7A37577}.Release|x64.Build.0 = Release|x64
+		{9E7468D2-CA97-4392-9F06-D6F3C7A37577}.Release|x86.ActiveCfg = Release|Win32
+		{9E7468D2-CA97-4392-9F06-D6F3C7A37577}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0D4FDEA2-D885-4C25-81CC-0DE1C336F559}
+	EndGlobalSection
+EndGlobal

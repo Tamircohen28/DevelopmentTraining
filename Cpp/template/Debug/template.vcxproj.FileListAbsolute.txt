@@ -1,0 +1,2 @@
+C:\Users\Tamir Cohen\Desktop\DevelopmentTraining\Cpp\template\Debug\template.exe
+C:\Users\Tamir Cohen\Desktop\DevelopmentTraining\Cpp\template\Debug\template.pdb

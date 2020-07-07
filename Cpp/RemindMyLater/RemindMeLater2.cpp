@@ -190,7 +190,7 @@ void RML2::RML2_func(reminder**& reminder_buf) {
     }
 }
 
-void main() {
-    reminder** calander = (reminder**)calloc(BUFFER_SIZE, sizeof(reminder*));
-    RML2::RML2_func(calander);
-}
+//void main() {
+//    reminder** calander = (reminder**)calloc(BUFFER_SIZE, sizeof(reminder*));
+//    RML2::RML2_func(calander);
+//}

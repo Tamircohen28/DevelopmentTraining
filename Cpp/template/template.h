@@ -1,126 +1,51 @@
-#pragma once
 #include <iostream>
-#define DEBUG true
-#define ERR_MSG "[ERR]: Falied to allocate memory"
-#define FREE_MSG "[INFO]: Needed to free pointer"
+#include <string>
+#include "RemindMeLater1.h"
+// #include "RemindMeLater2.h"
+#define MEM_ERR "\nEnable to allocte memory!"
+#define BUFFER_SIZE 3
+#define NAME_SIZE 30
+#define MANU "$> Enter 0 to del reminder \n$> Enter 1 to add new reminder \n$> Enter 2 to print meetings only"
 
-namespace templates {
-    // Array struct
-    template<typename T>
-    struct s_arr
-    {
-        T* ptr;
-        size_t size;
-    };
+// crypto higher then cyber
+enum praiority
+{
+    E_HIGHEST = 5,
+    E_CYPBER = 3,
+    E_CRYPTO = 4,
+    E_MEETING = 2,
+    E_DEFUALT = 1
+};
 
-    // Print given pointer in a given casting
-    template<typename T, typename cast>
-    void print_add(const T* const ptr) {
-        std::cout << "Current add: " << cast(ptr) << std::endl;
-    }
+enum class m_types {CYBER, CRYPTO, MEETING, DEFUALT, NONE};
 
-    /**
-     * Allocates new memory in the heap
-     * @param ptr must be null or heap pointer
-     * @return pointr to new memory located
-     */
-    template<typename T>
-    T* talloc(T* ptr, size_t current_size, size_t add_size)
-    {
-        std::cout << "TALLOC " << current_size << " " << add_size << std::endl;
-        T* temp = nullptr;
+// new type
+struct reminder
+{
+    char* ptr;
+    uint8_t severity;
+    m_types type;
+    char* invited;
+    uint8_t N_invited;
+    uint16_t called;
+};
 
-        // allocating new mem
-        if (current_size == 0) {
-            temp = (T*)calloc(1, add_size);
-        }
-        else
-        {
-            // realloc frees ptr 
-            temp = (T*)realloc(ptr, current_size + add_size);
-        }
+void print_reminder(reminder*& r_ptr, bool print_invited = false);
 
-        // fail to allocate
-        if (!temp) {
-            std::cout << ERR_MSG << std::endl;
-            exit(EXIT_FAILURE);
-        }
+void print_calander(reminder**& calander, bool print_full = false, m_types specific_type = m_types::NONE);
 
-        std::cout << "END TALLOC" << std::endl;
-        return temp;
-    }
+void rec_invited(reminder*& p_reminder);
 
+void rec_reminder(reminder*& p_reminder); 
 
-    /**
-     * Updates the size of pointer and addes the var, use only for non-array types
-     * @param ptr must be null or heap pointer
-     * @return size of given variable, updates original pointer
-     */
-    template <typename T>
-    size_t size(uint8_t*& ptr, size_t& current_size, T var)
-    {
-#if DEBUG
-        std::cout << "S1:" << std::endl;
-        std::cout << (int)current_size << std::endl;
-        print_add<uint8_t, int>(ptr);
-#endif // DEBUG
+void add_reminder(reminder**& calander, size_t& index);
 
-        // allocating new mwm
-        ptr = talloc(ptr, current_size, sizeof(var));
+void del_reminder(reminder**& calander, size_t& index); 
 
-        // copy new data to pointer
-        memcpy((ptr + current_size), &var, sizeof(var));
-        current_size += sizeof(var);
+size_t find_spcae(reminder**& array);
 
-#if DEBUG
-        print_add<uint8_t, int>(ptr);
-        std::cout << std::endl;
-#endif // DEBUG
+bool is_enum(int val); 
 
-        return sizeof(var);
-    }
+size_t get_action(); 
 
-    /**
-     * Updates the size of pointer and addes the var, use only for array types
-     * @param ptr must be null or heap pointer
-     * @return size of given variable, updates original pointer
-     */
-    template<typename T>
-    size_t size(uint8_t*& ptr, size_t& current_size, s_arr<T> Arr) {
-#if DEBUG
-        std::cout << "S2:" << std::endl;
-        std::cout << (int)current_size << std::endl;
-        print_add<uint8_t, int>(ptr);
-#endif // DEBUG
-
-        // allocating new memory
-        ptr = talloc(ptr, current_size, Arr.size);
-
-        // copy new data to pointer
-        memcpy((ptr + current_size), Arr.ptr, Arr.size);
-        current_size += Arr.size;
-
-#if DEBUG
-        print_add<uint8_t, int>(ptr);
-        std::cout << std::endl;
-#endif // DEBUG
-
-        return (Arr.size);
-    }
-
-    /**
-     * Generic funtion to nuild a message of unknown number of variables
-     * of unkwnown types
-     * @param uint8_t* ptr -> pointer to heap or nullptr
-     * @param size_t current_size -> number of bytes pointed to by ptr
-     * @param first & args are unknown variables
-     * @return size of message, updates original pointer to point to message
-     */
-    template<typename T, typename... Args>
-    size_t size(uint8_t*& ptr, size_t current_size, T first, Args... args) {
-        return size(ptr, current_size, first) + size(ptr, current_size, args...);
-    }
-
-    // prints the value of an address in memory
-    void print_cell(int address);
-}
+void RML3_func(reminder**& reminder_buf);

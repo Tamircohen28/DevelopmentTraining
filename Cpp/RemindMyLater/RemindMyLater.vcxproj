@@ -18,11 +18,23 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="RemindMeLater0.cpp" />
+    <ClCompile Include="RemindMeLater1.cpp" />
+    <ClCompile Include="RemindMeLater2.cpp" />
+    <ClCompile Include="RemindMeLater3.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="RemindMeLater0.h" />
+    <ClInclude Include="RemindMeLater1.h" />
+    <ClInclude Include="RemindMeLater2.h" />
+    <ClInclude Include="RemindMeLater3.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{7bd91d48-daa7-4df1-9982-305e74947679}</ProjectGuid>
-    <RootNamespace>ReminfMeLater</RootNamespace>
+    <ProjectGuid>{21928cfb-1df0-4ad5-a0c7-6c5db00797da}</ProjectGuid>
+    <RootNamespace>RemindMyLater</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -138,16 +150,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="RemindMeLater1.cpp" />
-    <ClCompile Include="RemindMeLater2.cpp" />
-    <ClCompile Include="RemindMeLater0.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="RemindMeLater0.h" />
-    <ClInclude Include="RemindMeLater1.h" />
-    <ClInclude Include="RemindMeLater2.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

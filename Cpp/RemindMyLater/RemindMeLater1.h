@@ -24,6 +24,9 @@ namespace RML1 {
 	{
 		E_DEL = 0,
 		E_ADD = 1,
-		E_EMPTY = 2
+		E_PRINT_MEETINGS = 2,
+		E_EMPTY = 3,
 	};
+
+	const int ENUM_ARR[] = { E_DEL, E_ADD, E_PRINT_MEETINGS };
 }

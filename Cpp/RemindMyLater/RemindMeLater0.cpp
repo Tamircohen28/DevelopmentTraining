@@ -52,3 +52,7 @@ void RML0::reminder_in() {
         rec_reminder(p_reminder);
     }
 }
+
+int main() {
+    RML0::reminder_in();
+}

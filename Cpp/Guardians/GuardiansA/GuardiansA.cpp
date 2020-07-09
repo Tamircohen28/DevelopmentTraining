@@ -5,6 +5,20 @@
 #include "Heap.h"
 #define MEM_ERR "\n$> \""<< __FILE__ << "\" \n[" << __LINE__ << "]: Unable to allocate mem!"
 
+void print_var(void* pData) {
+	std::cout << *(int*)pData;
+}
+
+int32_t delete_ptr(void* pData) {
+	if (!pData) {
+		return -1;
+	}
+
+	free(pData);
+	pData = nullptr;
+	return 0;
+}
+
 int32_t Heap_cmp(const void* pObjl, const void* pObj2) {
 	if (*(int *)pObjl == *(int*)pObj2)
 	{
@@ -32,10 +46,6 @@ SHeap<T>* Heap_New(size_t uMaxSize, cmp_fnc pfnComparator) {
 	temp->ptr = nullptr;
 
 	return temp;
-}
-
-void print_var(void* pData) {
-	std::cout << *(int*)pData;
 }
 
 template<typename T>
@@ -119,23 +129,9 @@ EHeapError Heap_Push(SHeap<T>* pHeap, void* pData)
 
 	pHeap->ptr = temp;
 	pHeap->current_size += 1;
+	insert_val(&pHeap);
 	return eHeapError_Success;
 }
-
-
-size_t get_index(void** pData, size_t value) {
-	size_t index = 0;
-	while (pData)
-	{
-		if (value < (size_t)(*pData)) {
-			return index;
-		}
-		index++;
-		pData++;
-	}
-	return index;
-}
-
 
 template<typename T>
 bool Heap_IsEmpty(const SHeap<T>* pHeap) {
@@ -153,6 +149,44 @@ size_t Heap_GetSize(SHeap<T>* pHeap) {
 }
 
 template<typename T>
+void* Heap_PopHead(SHeap<T>** pHeap) {
+	if (Heap_IsEmpty((*pHeap))) {
+		return nullptr;
+	}
+	T* return_ptr = nullptr;
+
+	if ((*pHeap)->current_size == 1)
+	{
+		(*pHeap)->current_size--;
+		return_ptr = (*pHeap)->ptr[0];
+		(*pHeap)->ptr = nullptr;
+		return return_ptr;
+	}
+
+	// Store the minimum value, and remove it from heap 
+	return_ptr = (*pHeap)->ptr[0];
+	(*pHeap)->ptr[0] = (*pHeap)->ptr[(*pHeap)->current_size - 1];
+	(*pHeap)->current_size--;
+	MinHeapify((*pHeap), 0);
+
+	return return_ptr;
+}
+
+template<typename T>
+EHeapError Heap_Delete(SHeap<T>** pHeap, del_fnc pfnDataDel) {
+
+	for (size_t i = 0; i < (*pHeap)->current_size; i++)
+	{
+		if (pfnDataDel((*pHeap)->ptr[i]) != 0) {
+			return eHeapError_Error;
+		}
+	}
+	delete((*pHeap));
+	*pHeap = nullptr;
+	return eHeapError_Success;
+}
+
+template<typename T>
 void* Heap_GetHead(const SHeap<T>* pHeap) {
 	if (Heap_IsEmpty(pHeap)) {
 		return nullptr;
@@ -160,16 +194,94 @@ void* Heap_GetHead(const SHeap<T>* pHeap) {
 	return pHeap->ptr[0];
 }
 
+/* From here this are function  that i added that are not included
+in the given in the .h file
+*/
+
+// to get index of the parent
+int parent(int i) { return (i - 1) / 2; }
+
+// to get index of left child of node at index i 
+int left(int i) { return (2 * i + 1); }
+
+// to get index of right child of node at index i 
+int right(int i) { return (2 * i + 2); }
+
+// A utility function to swap two elements 
+void swap(int* x, int* y)
+{
+	int temp = *x;
+	*x = *y;
+	*y = temp;
+}
+
+/**
+* function to fix the heap after inserting value
+* @param pHeap    pointer to the pointer of The Heap
+* @return (void)  Returns nothing
+*/
+template<typename T>
+void insert_val(SHeap<T>** pHeap)
+{
+	int i = (*pHeap)->current_size - 1;
+
+	// Fix the min heap property if it is violated 
+	while (i != 0 && *(*pHeap)->ptr[parent(i)] > * (*pHeap)->ptr[i])
+	{
+		swap((*pHeap)->ptr[i], (*pHeap)->ptr[parent(i)]);
+		i = parent(i);
+	}
+}
+
+
+/**
+* A recursive method to heapify a subtree with the root at given index
+* This method assumes that the subtrees are already heapified
+* @param pHeap    pointer to The Heap
+* @param i        index to heapify
+* @return (void)  Returns nothing
+*/
+template<typename T>
+void MinHeapify(SHeap<T>* pHeap, int i)
+{
+	int l = left(i);
+	int r = right(i);
+	int smallest = i;
+
+	if (l < pHeap->current_size && *pHeap->ptr[l] < *pHeap->ptr [i])
+		smallest = l;
+	if (r < pHeap->current_size && *pHeap->ptr[r] < *pHeap->ptr [smallest])
+		smallest = r;
+	if (smallest != i)
+	{
+		swap(pHeap->ptr[i], pHeap->ptr[smallest]);
+		MinHeapify(pHeap, smallest);
+	}
+}
+
 int main()
 {
-	SHeap<int>* Hptr = Heap_New<int>(1, Heap_cmp);
-	int a = 5; // addr a: 1000, a = 5
-	int b = 10; // addr a: 1000, a = 5
-	int* p = &a; // addr p: 2000,  p = 1000, *p(1000) = 5
+	SHeap<int>* Hptr = Heap_New<int>(10, Heap_cmp);
+	int a = 4; 
+	int b = 2; 
+	int c = 1;
+	int d = 9;
+	int e = 3;
+	
 	Heap_Push(Hptr, &a);
 	Heap_Push(Hptr, &b);
+	Heap_Push(Hptr, &c);
 	Heap_Print(Hptr, print_var);
-
+	Heap_PopHead(&Hptr);
+	std::cout << "\n$> Poped Head!" << std::endl;
+	Heap_Print(Hptr, print_var);
+	Heap_Push(Hptr, &d);
+	Heap_Push(Hptr, &e);
+	Heap_Print(Hptr, print_var);
+	Heap_Delete(&Hptr, delete_ptr);
+	std::cout << "\n$> Delete heap!" << std::endl;
+	Heap_Print(Hptr, print_var);
 	return 0;
 }
+
 

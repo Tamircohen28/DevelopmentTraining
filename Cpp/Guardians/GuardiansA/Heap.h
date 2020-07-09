@@ -149,7 +149,7 @@ size_t Heap_GetSize(SHeap<T>* pHeap);
 * @return (void*) The data of the wanted node
 */
 template<typename T>
-void *Heap_PopHead(SHeap<T> *pHeap);
+void* Heap_PopHead(SHeap<T>** pHeap);
 
 /**
 * The function returns a pointer to the data at the head of the heap without removing

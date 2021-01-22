@@ -15,10 +15,11 @@ import urllib.request
 import urllib.parse
 import re
 import argparse
+from bs4 import BeautifulSoup
 
 # TODO: Make sure you change the path to match your pc
-C_DOWNLOAD_PATH = r"C:\Users\Tamir Cohen\Downloads"
-C_CHROME_DRIVER_EXE_PATH = r"C:\Users\Tamir Cohen\Downloads\chromedriver_win32\chromedriver.exe"
+C_DOWNLOAD_PATH = r"C:\Users\tamir\Downloads"
+C_CHROME_DRIVER_EXE_PATH = r"C:\Users\tamir\chromedriver_win32\chromedriver.exe"
 
 
 def create_dir(new_dir):
@@ -138,19 +139,21 @@ def download_url(driver_obj, url):
     driver_obj.close()
 
 
-def get_optional_url(search):
+def get_optional_url(search_keyword):
     """
     this function returns the list of possible urls for search of song
     in youtube
     :param search: the song name to search
     :return: list of url
     """
-    query_string = urllib.parse.urlencode({"search_query": search})
-    html_content = urllib.request.urlopen("http://www.youtube.com/results?" + query_string)
-    search_results = re.findall(r'href=\"\/watch\?v=(.{11})', html_content.read().decode())
+    # format search into query
+    search_keyword = urllib.parse.quote(search_keyword)
+    html = urllib.request.urlopen("https://www.youtube.com/results?search_query=" + search_keyword)
+    search_results = re.findall(r"watch\?v=(\S{11})", html.read().decode())
 
     # casting double searches
     results = []
+
     for i in range(len(search_results)):
         # getting the current search
         current_search = "http://www.youtube.com/watch?v=" + search_results[i]
@@ -202,7 +205,9 @@ def download_song(search, output_path, filling_lucky, list_of_songs, quite, list
     song_url = []
     if len(list_of_songs) == 0 and search != "":
         # possible url
+        print("search is {}".format(search))
         list_of_url = get_optional_url(search)
+        print("Url is:", list_of_url)
         if filling_lucky:
             song_url = [list_of_url[0]]
         else:
@@ -225,7 +230,7 @@ def download_song(search, output_path, filling_lucky, list_of_songs, quite, list
         driver2 = webdriver.Chrome(C_CHROME_DRIVER_EXE_PATH)
 
         if not quite:
-                temp_driver = webdriver.Chrome(C_CHROME_DRIVER_EXE_PATH)
+            temp_driver = webdriver.Chrome(C_CHROME_DRIVER_EXE_PATH)
 
         try:
             print("\n### Downloading song from {0} ###".format(url))

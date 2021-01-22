@@ -1,6 +1,6 @@
 # to run script you need:
 # python 3 and pip3
-# from pip you need to install selenium -> pip install -u selenium
+# from pip you need to install selenium -> pip install selenium
 # you need to install google chrome
 # you need to download chromedriver.exe by you chrome version
 # update paths by you pc dirs
@@ -15,11 +15,12 @@ import urllib.request
 import urllib.parse
 import re
 import argparse
-from bs4 import BeautifulSoup
+from logger import warn, info, error
+
 
 # TODO: Make sure you change the path to match your pc
 C_DOWNLOAD_PATH = r"C:\Users\tamir\Downloads"
-C_CHROME_DRIVER_EXE_PATH = r"C:\Users\tamir\chromedriver_win32\chromedriver.exe"
+C_CHROME_DRIVER_EXE_PATH = r"C:\Users\tamir\Desktop\chromedriver.exe"
 
 
 def create_dir(new_dir):
@@ -34,7 +35,7 @@ def create_dir(new_dir):
             return True
 
         except OSError:
-            print("Creation of the directory %s failed" % new_dir)
+            error(f"Creation of the directory failed '{new_dir}'")
             return False
 
     return True
@@ -50,7 +51,7 @@ def delete_path(path):
         os.remove(path)
         return True
     else:
-        print("The file {0} does not exist and can't be deleted")
+        error(f"The file {path} does not exist and can't be deleted")
         return False
 
 
@@ -65,7 +66,7 @@ def copy_dir(path, new_dir):
         copy2(path, new_dir)
         return True
     else:
-        print("Can't copy path {0} does not exist".format(new_dir))
+        error(f"Can't copy path {new_dir} does not exist")
         return False
 
 
@@ -80,17 +81,21 @@ def get_last_file(path):
     try:
         return max(paths, key=os.path.getctime)
     except ValueError:
-        print("{0} does not exist to get_last_file".format(path))
+        error(f"{path} does not exist to get_last_file")
 
-
-def every_downloads_chrome(driver_obj):
-    if not driver_obj.current_url.startswith("chrome://downloads"):
-        driver_obj.get("chrome://downloads/")
-
-    return driver_obj.execute_script("""
-        var items = downloads.Manager.get().items_;
+def every_downloads_chrome(driver):
+    """
+    this function return the list of every download in the chrome
+    :param driver: driver of web
+    """
+    
+    if not driver.current_url.startswith("chrome://downloads"):
+        driver.get("chrome://downloads/")
+    return driver.execute_script("""
+        var items = document.querySelector('downloads-manager')
+            .shadowRoot.getElementById('downloadsList').items;
         if (items.every(e => e.state === "COMPLETE"))
-            return items.map(e => e.file_url);
+            return items.map(e => e.fileUrl || e.file_url);
         """)
 
 
@@ -115,7 +120,7 @@ def download_url(driver_obj, url):
 
     # Click login
     submit_button.click()
-    print("Waiting for load to finish...")
+    info("Waiting for load to finish...")
 
     # trying to download until is succeed
     while True:
@@ -126,14 +131,14 @@ def download_url(driver_obj, url):
         except NoSuchElementException:
             pass
 
-    print("Load had finished, Downloading the song...")
+    info("Load had finished, Downloading the song...")
     # Click download
     download_button.click()
-    print("Waiting for download...")
+    info("Waiting for download...")
 
     # waiting for download to end
     WebDriverWait(driver_obj, 120, 1).until(every_downloads_chrome)
-    print("Download had finished!")
+    info("Download had finished!")
 
     # closing window
     driver_obj.close()
@@ -173,67 +178,78 @@ def user_pick_song(driver_obj, list_of_url, num_of_pick):
     """
     for i in range(num_of_pick):
         try:
-            print("\n$ Showing {0}".format(list_of_url[i]))
+            info("Showing {0}".format(list_of_url[i]))
             # showing the page
             driver_obj.get(list_of_url[i])
             result = input("Is this the song you wanted? press 1 for confirm or enter to go on\n")
 
             if result == "1":
                 driver_obj.close()
-                return list_of_url[i]
+                return [list_of_url[i]]
 
         except IndexError:
-            print("length of url list was {0} and you didn't chose anything".format(len(list_of_url)))
-            return ""
+            warn("length of url list was {0} and you didn't chose anything".format(len(list_of_url)))
+            return []
 
     driver_obj.close()
-    print("You didn't chose anything in the given options...")
-    return ""
+    warn("You didn't chose anything in the given options...")
+    return []
 
 
-def download_song(search, output_path, filling_lucky, list_of_songs, quite, list_of_url):
+def download_song(search, output_path, filling_lucky, user_songs, quite, user_urls):
     """
     this function downloads a song from youtube to a given dir
     :param search: the name of song to search
     :param output_path: the output path of the download path
     :param filling_lucky: bool, if to lat to program chose the url alone or user chose
-    :param list_of_songs: list of url's the user want to download
+    :param user_songs: list of songs names the user want to download
     :param quite: turn off song page open
+    :param user_urls: list of songs URLs the user want to download
     :return: None
     """
+    songs_url = []
 
-    song_url = []
-    if len(list_of_songs) == 0 and search != "":
-        # possible url
-        print("search is {}".format(search))
-        list_of_url = get_optional_url(search)
-        print("Url is:", list_of_url)
+    # user set one song search
+    if len(user_songs) == 0 and search != "":
+        # possible urls
+        optional_url = get_optional_url(search)
+
+        if len(optional_url) <= 0:
+            sys.exit(error("[Error] couldn't fins matching url for search '{}'".format(search)))
+        
+        # user doesn't want to chose
         if filling_lucky:
-            song_url = [list_of_url[0]]
+            songs_url = [optional_url[0]]
+        
+        # user want to chose
         else:
-            # Using Chrome to access web
+            # Using Chrome to access web, display songs for user
             driver = webdriver.Chrome(C_CHROME_DRIVER_EXE_PATH)
-            song_url = [user_pick_song(driver, list_of_url, len(list_of_url))]
+            songs_url = user_pick_song(driver, optional_url, len(optional_url))
 
-            if song_url == "":
-                sys.exit("\n** No url was chose")
+            if len(songs_url) <= 0:
+                sys.exit("[Error] No url was chosen")
 
-    elif len(list_of_songs) > 0:
-        print("\n@@@ Downloading user costume list of songs @@@")
-        for song in list_of_songs:
-            song_url.append(get_optional_url(song)[0])
+    # user set list of songs, search all of them
+    elif len(user_songs) > 0:
+        info("Downloading user costume list of songs")
+        for song in user_songs:
+            songs_url.append(get_optional_url(song)[0])
 
-    if len(list_of_url) > 0:
-        print("\n$$$ Downloading user costume list of url $$$")
+    # user list of Urls
+    elif len(user_urls) > 0:
+        info("Downloading user costume list of url")
+        songs_url = user_urls
 
-    for url in song_url + list_of_url:
+    # download all
+    for url in songs_url:
         driver2 = webdriver.Chrome(C_CHROME_DRIVER_EXE_PATH)
 
         if not quite:
             temp_driver = webdriver.Chrome(C_CHROME_DRIVER_EXE_PATH)
 
         try:
-            print("\n### Downloading song from {0} ###".format(url))
+            info("Downloading song from {0}".format(url))
 
             # show song page
             if not quite:
@@ -247,7 +263,7 @@ def download_song(search, output_path, filling_lucky, list_of_songs, quite, list
 
             if not create_dir(output_path):
                 driver2.close()
-                sys.exit("can't create new dir, song is in {0}".format(file_path))
+                sys.exit(error("can't create new dir, song is in {0}".format(file_path)))
 
             # copying new dir
             if copy_dir(file_path, output_path):
@@ -261,12 +277,13 @@ def download_song(search, output_path, filling_lucky, list_of_songs, quite, list
             if not quite:
                 temp_driver.close()
 
-            print("\n$$ Song file is waiting for you in {0}!".format(file_path_out))
+            info("Song file is waiting for you in {0}!".format(file_path_out))
 
         except PermissionError:
             if not quite:
                 temp_driver.close()
-            sys.exit('Error occur, check destination and download paths')
+                
+            sys.exit(error('Check destination and download paths'))
 
 
 if __name__ == '__main__':

@@ -88,12 +88,12 @@ EHeapError Heap_Push(SHeap<T>* pHeap, void* pData)
 {
 	if (pHeap == nullptr || pData == nullptr) {
 		std::cout << "[ERR]: 'Heap_Push' func variables cannot be nullptr!" << std::endl;
-		return eHeapError_InvalidParams;
+		return EHeapError::eHeapError_InvalidParams;
 	}
 
 	if (Heap_IsFull(pHeap)) {
 		std::cout << "[ERR]: 'Heap_Print' func: Heap is full!" << std::endl;
-		return eHeapError_Full_Heap;
+		return EHeapError::eHeapError_Full_Heap;
 	}
 
 	// create pointer to value by allocating memory
@@ -101,7 +101,7 @@ EHeapError Heap_Push(SHeap<T>* pHeap, void* pData)
 
 	if (!temp_pData) {
 		std::cout << MEM_ERR << std::endl;
-		return eHeapError_Error;
+		return EHeapError::eHeapError_Error;
 	}
 	*temp_pData = *(T*)pData;
 
@@ -111,7 +111,7 @@ EHeapError Heap_Push(SHeap<T>* pHeap, void* pData)
 
 		if (!temp) {
 			std::cout << MEM_ERR << std::endl;
-			return eHeapError_Error;
+			return EHeapError::eHeapError_Error;
 		}
 		*temp = temp_pData;
 	}
@@ -122,7 +122,7 @@ EHeapError Heap_Push(SHeap<T>* pHeap, void* pData)
 
 		if (!temp) {
 			std::cout << MEM_ERR << std::endl;
-			return eHeapError_Error;
+			return EHeapError::eHeapError_Error;
 		}
 		temp[pHeap->current_size] = temp_pData;
 	}
@@ -130,7 +130,7 @@ EHeapError Heap_Push(SHeap<T>* pHeap, void* pData)
 	pHeap->ptr = temp;
 	pHeap->current_size += 1;
 	insert_val(&pHeap);
-	return eHeapError_Success;
+	return EHeapError::eHeapError_Success;
 }
 
 template<typename T>
@@ -178,12 +178,12 @@ EHeapError Heap_Delete(SHeap<T>** pHeap, del_fnc pfnDataDel) {
 	for (size_t i = 0; i < (*pHeap)->current_size; i++)
 	{
 		if (pfnDataDel((*pHeap)->ptr[i]) != 0) {
-			return eHeapError_Error;
+			return EHeapError::eHeapError_Error;
 		}
 	}
 	delete((*pHeap));
 	*pHeap = nullptr;
-	return eHeapError_Success;
+	return EHeapError::eHeapError_Success;
 }
 
 template<typename T>

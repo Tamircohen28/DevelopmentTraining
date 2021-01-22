@@ -1,13 +1,9 @@
 #pragma once
 
-// sharelSchool1TeachersIBIss1O1TamirIGuardianstheap.h 
-#ifndef GUARDIANSOFTHEBISS_HEAP_H
-#define GUARDIANSOFTHEBISS_HEAP_H 
-
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
-
+#include "Iheap.h"
 
 /****************************************************************************
 * Types Declarations
@@ -19,16 +15,7 @@
 * @return (int32t) 0 if the function succeeded, or -1 on failure
 *
 */
-typedef int32_t(*del_fnc)(void *pData);
-
-/** * The function compares two data objects
-*
-* @param pObjl The first object
-* @param pObj2 The second object
-* @return (int32_t) 0 if the objects are equal, 1 if the first is bigger or -1 if the second object is bigger
-*
-*/
-typedef int32_t(*cmp_fnc)(const void *pObjl, const void *pObj2);
+typedef int32_t(*del_fnc)(void* pData);
 
 /**
 * The function prints the data object
@@ -42,20 +29,10 @@ typedef void(*print_fnc)(void* pData);
 ****************************************************************************/
 template<typename T>
 struct SHeap {
-	T** ptr;
+	Iheap<T>** arr;
 	size_t max_size;
 	size_t current_size;
-	cmp_fnc compre;
 };
-
-template<typename T>
-struct Solider {
-	T* points;
-	char* name;
-	char* unit;
-	char* id;
-};
-
 
 /****************************************************************************
 * Enum Declarations
@@ -72,7 +49,7 @@ typedef enum class _EHeapError {
 * Function Declarations
 ****************************************************************************/
 
-/** 
+/**
 * Allocates and initializes a new Heap.
 * The function allocates memory for the new Heap
 * In case of an error the function returns a NULL
@@ -83,7 +60,7 @@ typedef enum class _EHeapError {
 * @return (SHeap*)         A pointer to the allocated Heap, or NULL for failure
 */
 template<typename T>
-SHeap<T>* Heap_New(size_t uMaxSize, cmp_fnc pfnComparator);
+SHeap<T>* Heap_New(size_t uMaxSize);
 
 /**
 * Deletes a complete Heap and it's data
@@ -108,13 +85,13 @@ EHeapError Heap_Delete(SHeap<T>** pHeap, del_fnc pfnDataDel);
  *  comparator function.
  *
  *  @param pHeap         The Heap to insert the new node into
- *  @param pData         The data to add to the Heap
+ *  @param pObj          The Iheap object to add to the Heap
  *
  * @return (EHeapError) One of the values of EHeapError, indicating
  *                            whether the function succeeded or not.
 */
- template<typename T>
- EHeapError Heap_Push(SHeap<T>* pHeap, void* pData);
+template<typename T>
+EHeapError Heap_Push(SHeap<T>* pHeap, Iheap<T>* pObj);
 
 /**
 *  Checks if the Heap is empty.
@@ -136,7 +113,7 @@ bool Heap_IsEmpty(const SHeap<T>* pHeap);
  * @return (bool)        true if full, false otherwise
  */
 template<typename T>
-bool Heap_IsFull(const SHeap<T> *pHeap);
+bool Heap_IsFull(const SHeap<T>* pHeap);
 
 /**
 *  Returns the current size of the Heap.
@@ -174,11 +151,18 @@ void* Heap_GetHead(const SHeap<T>* pHeap);
 * The function prints the data of all the nodes in the heap
 *
 * @param pHeap            The Heap to print
-* @param printFunction    The function to print the data of the nodes
 *
 * @return Nothing.
 */
 template<typename T>
-void Heap_Print(const SHeap<T>* pHeap, print_fnc printFunction);
+void Heap_Print(const SHeap<T>* pHeap);
 
-#endif //GUARDIANSOFTHEBISS HEAP H
+/**
+* The function calls the print of all the objects in the heap
+*
+* @param pHeap            The Heap to print
+*
+* @return Nothing.
+*/
+template<typename T>
+void Heap_Print_Obj(const SHeap<T>* const pHeap);

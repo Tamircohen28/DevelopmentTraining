@@ -4,13 +4,15 @@
 #include <iostream>
 #include "gtest/gtest.h"
 
-TEST(SquareRootTest, PositiveNos) {
+TEST(SquareRootTest, PositiveNos)
+{
     EXPECT_EQ(18.0, square‑root(324.0));
     EXPECT_EQ(25.4, square‑root(645.16));
     EXPECT_EQ(50.3321, square‑root(2533.310224));
 }
 
-TEST(SquareRootTest, ZeroAndNegativeNos) {
+TEST(SquareRootTest, ZeroAndNegativeNos)
+{
     ASSERT_EQ(0.0, square‑root(0.0));
     ASSERT_EQ(‑1, square‑root(‑22.0));
 }
@@ -18,10 +20,9 @@ TEST(SquareRootTest, ZeroAndNegativeNos) {
 class Tmath
 {
 public:
-	int add(int x, int y) { return x + y; }
-	int multiply(int x, int y) { return x * y; }
+    int add(int x, int y) { return x + y; }
+    int multiply(int x, int y) { return x * y; }
 };
-
 
 int main()
 {
@@ -31,7 +32,7 @@ int main()
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
 // Debug program: F5 or Debug > Start Debugging menu
 
-// Tips for Getting Started: 
+// Tips for Getting Started:
 //   1. Use the Solution Explorer window to add/manage files
 //   2. Use the Team Explorer window to connect to source control
 //   3. Use the Output window to see build output and other messages

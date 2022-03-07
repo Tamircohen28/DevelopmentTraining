@@ -2,7 +2,6 @@
 using namespace std;
 #include "mammal.h"
 
-
 class Cat : public Mammal
 {
 private:
@@ -11,7 +10,7 @@ private:
 
 public:
     Cat(string color, string miaow, bool breastfeed);
-    
+
     string get_color();
     void set_color(string color);
 

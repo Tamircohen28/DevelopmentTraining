@@ -9,7 +9,7 @@ private:
 
 public:
     SeaCat(string color, string miaow, bool breastfeed, string favorite_fish, bool salt_water = true);
-    
+
     string get_favorite_fish();
     void set_favorite_fish(string favorite_fish);
 

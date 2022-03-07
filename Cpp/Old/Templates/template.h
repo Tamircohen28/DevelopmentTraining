@@ -4,18 +4,20 @@
 #define ERR_MSG "[ERR]: Falied to allocate memory"
 #define FREE_MSG "[INFO]: Needed to free pointer"
 
-namespace templates {
+namespace templates
+{
     // Array struct
-    template<typename T>
+    template <typename T>
     struct s_arr
     {
-        T* ptr;
+        T *ptr;
         size_t size;
     };
 
     // Print given pointer in a given casting
-    template<typename T, typename cast>
-    void print_add(const T* const ptr) {
+    template <typename T, typename cast>
+    void print_add(const T *const ptr)
+    {
         std::cout << "Current add: " << cast(ptr) << std::endl;
     }
 
@@ -24,24 +26,26 @@ namespace templates {
      * @param ptr must be null or heap pointer
      * @return pointr and siz
      */
-    template<typename T>
-    T* talloc(T* ptr, size_t current_size, size_t add_size)
+    template <typename T>
+    T *talloc(T *ptr, size_t current_size, size_t add_size)
     {
         std::cout << "TALLOC " << current_size << " " << add_size << std::endl;
-        T* temp = nullptr;
+        T *temp = nullptr;
 
         // allocating new mem
-        if (current_size == 0) {
-            temp = (T*)calloc(1, add_size);
+        if (current_size == 0)
+        {
+            temp = (T *)calloc(1, add_size);
         }
         else
         {
-            // realloc frees ptr 
-            temp = (T*)realloc(ptr, current_size + add_size);
+            // realloc frees ptr
+            temp = (T *)realloc(ptr, current_size + add_size);
         }
 
         // fail to allocate
-        if (!temp) {
+        if (!temp)
+        {
             std::cout << ERR_MSG << std::endl;
             exit(EXIT_FAILURE);
         }
@@ -50,14 +54,13 @@ namespace templates {
         return temp;
     }
 
-
     /**
      * Updates the size of pointer and addes the var, use only for non-array types
      * @param ptr must be null or heap pointer
      * @return size of given variable, updates original pointer
      */
     template <typename T>
-    size_t size(uint8_t*& ptr, size_t& current_size, T var)
+    size_t size(uint8_t *&ptr, size_t &current_size, T var)
     {
 #if DEBUG
         std::cout << "S1:" << std::endl;
@@ -85,8 +88,9 @@ namespace templates {
      * @param ptr must be null or heap pointer
      * @return size of given variable, updates original pointer
      */
-    template<typename T>
-    size_t size(uint8_t*& ptr, size_t& current_size, s_arr<T> Arr) {
+    template <typename T>
+    size_t size(uint8_t *&ptr, size_t &current_size, s_arr<T> Arr)
+    {
 #if DEBUG
         std::cout << "S2:" << std::endl;
         std::cout << (int)current_size << std::endl;
@@ -116,8 +120,9 @@ namespace templates {
      * @param first & args are unknown variables
      * @return size of message, updates original pointer to point to message
      */
-    template<typename T, typename... Args>
-    size_t size(uint8_t*& ptr, size_t current_size, T first, Args... args) {
+    template <typename T, typename... Args>
+    size_t size(uint8_t *&ptr, size_t current_size, T first, Args... args)
+    {
         return size(ptr, current_size, first) + size(ptr, current_size, args...);
     }
 

@@ -9,7 +9,7 @@ private:
 
 public:
     FarmDog(string color, string bark, string favorite_tree, bool like_cows = true);
-    
+
     string get_favorite_tree();
     void set_favorite_tree(string favorite_tree);
 

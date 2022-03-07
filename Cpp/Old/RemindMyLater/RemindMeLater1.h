@@ -1,24 +1,25 @@
 #pragma once
 
-namespace RML1 {
+namespace RML1
+{
 	/*
 	funtions add new reminder to calander
 	*/
-	void add_reminder(char**& calander, size_t& index);
+	void add_reminder(char **&calander, size_t &index);
 
 	/*
 	funtions deletes reminder from calander
 	*/
-	void del_reminder(char**& calander, size_t& index);
+	void del_reminder(char **&calander, size_t &index);
 
-	void print_calander(char** const calander);
+	void print_calander(char **const calander);
 
 	/**
-	 * RML1 main function 
+	 * RML1 main function
 	 * function to manage reminders list as cycle buffer
 	 * @param reminder_buf must have allocated memory on heap
 	 */
-	void calander(char**& reminder_buf);
+	void calander(char **&reminder_buf);
 
 	enum OptionsEnum
 	{
@@ -28,5 +29,5 @@ namespace RML1 {
 		E_EMPTY = 3,
 	};
 
-	const int ENUM_ARR[] = { E_DEL, E_ADD, E_PRINT_MEETINGS };
+	const int ENUM_ARR[] = {E_DEL, E_ADD, E_PRINT_MEETINGS};
 }

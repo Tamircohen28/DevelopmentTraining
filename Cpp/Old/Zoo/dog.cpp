@@ -1,6 +1,7 @@
 #include "dog.h"
 
-Dog::Dog(string color, string bark) {
+Dog::Dog(string color, string bark)
+{
 	this->m_color = color;
 	this->m_bark = bark;
 }

@@ -5,12 +5,12 @@ using namespace std;
 class Pigeon : public Bird
 {
 private:
-    string m_color; 
+    string m_color;
     bool m_loves_bread;
- 
+
 public:
     Pigeon(string color, bool loves_bread, bool flying);
-    
+
     string get_color();
     void set_color(string color);
 

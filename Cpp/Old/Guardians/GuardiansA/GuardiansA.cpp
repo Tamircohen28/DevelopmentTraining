@@ -3,14 +3,17 @@
 
 #include <iostream>
 #include "Heap.h"
-#define MEM_ERR "\n$> \""<< __FILE__ << "\" \n[" << __LINE__ << "]: Unable to allocate mem!"
+#define MEM_ERR "\n$> \"" << __FILE__ << "\" \n[" << __LINE__ << "]: Unable to allocate mem!"
 
-void print_var(void* pData) {
-	std::cout << *(int*)pData;
+void print_var(void *pData)
+{
+	std::cout << *(int *)pData;
 }
 
-int32_t delete_ptr(void* pData) {
-	if (!pData) {
+int32_t delete_ptr(void *pData)
+{
+	if (!pData)
+	{
 		return -1;
 	}
 
@@ -19,23 +22,26 @@ int32_t delete_ptr(void* pData) {
 	return 0;
 }
 
-int32_t Heap_cmp(const void* pObjl, const void* pObj2) {
-	if (*(int *)pObjl == *(int*)pObj2)
+int32_t Heap_cmp(const void *pObjl, const void *pObj2)
+{
+	if (*(int *)pObjl == *(int *)pObj2)
 	{
 		return 0;
 	}
-	else if (*(int*)pObjl > *(int*)pObj2)
+	else if (*(int *)pObjl > *(int *)pObj2)
 	{
 		return 1;
 	}
 	return -1;
 }
 
-template<typename T>
-SHeap<T>* Heap_New(size_t uMaxSize, cmp_fnc pfnComparator) {
-	SHeap<T>* temp = (SHeap<T>*)calloc(1, sizeof(SHeap<T>));
+template <typename T>
+SHeap<T> *Heap_New(size_t uMaxSize, cmp_fnc pfnComparator)
+{
+	SHeap<T> *temp = (SHeap<T> *)calloc(1, sizeof(SHeap<T>));
 
-	if (!temp) {
+	if (!temp)
+	{
 		std::cout << MEM_ERR << std::endl;
 		return nullptr;
 	}
@@ -48,14 +54,17 @@ SHeap<T>* Heap_New(size_t uMaxSize, cmp_fnc pfnComparator) {
 	return temp;
 }
 
-template<typename T>
-void Heap_Print(const SHeap<T>* pHeap, print_fnc printFunction) {
-	if (!pHeap) {
+template <typename T>
+void Heap_Print(const SHeap<T> *pHeap, print_fnc printFunction)
+{
+	if (!pHeap)
+	{
 		std::cout << "$> Heap ptr -> nullptr" << std::endl;
 		return;
 	}
 
-	if (!printFunction) {
+	if (!printFunction)
+	{
 		std::cout << "[ERR]: 'Heap_Print' func variable 'printFunction' cannot be nullptr!" << std::endl;
 		return;
 	}
@@ -64,13 +73,15 @@ void Heap_Print(const SHeap<T>* pHeap, print_fnc printFunction) {
 	std::cout << "<Max>: " << pHeap->max_size << std::endl;
 	std::cout << "<Cur>: " << pHeap->current_size << std::endl;
 
-	if (pHeap->ptr != nullptr && pHeap->current_size > 0) {
+	if (pHeap->ptr != nullptr && pHeap->current_size > 0)
+	{
 		std::cout << "[";
 		for (size_t i = 0; i < pHeap->current_size; i++)
 		{
 			printFunction(pHeap->ptr[i]);
-			
-			if (i < pHeap->current_size - 1) {
+
+			if (i < pHeap->current_size - 1)
+			{
 				std::cout << ", ";
 			}
 		}
@@ -83,33 +94,38 @@ void Heap_Print(const SHeap<T>* pHeap, print_fnc printFunction) {
 	}
 }
 
-template<typename T>
-EHeapError Heap_Push(SHeap<T>* pHeap, void* pData)
+template <typename T>
+EHeapError Heap_Push(SHeap<T> *pHeap, void *pData)
 {
-	if (pHeap == nullptr || pData == nullptr) {
+	if (pHeap == nullptr || pData == nullptr)
+	{
 		std::cout << "[ERR]: 'Heap_Push' func variables cannot be nullptr!" << std::endl;
 		return EHeapError::eHeapError_InvalidParams;
 	}
 
-	if (Heap_IsFull(pHeap)) {
+	if (Heap_IsFull(pHeap))
+	{
 		std::cout << "[ERR]: 'Heap_Print' func: Heap is full!" << std::endl;
 		return EHeapError::eHeapError_Full_Heap;
 	}
 
 	// create pointer to value by allocating memory
-	T* temp_pData = (T*)calloc(1, sizeof(T*)); // 
+	T *temp_pData = (T *)calloc(1, sizeof(T *)); //
 
-	if (!temp_pData) {
+	if (!temp_pData)
+	{
 		std::cout << MEM_ERR << std::endl;
 		return EHeapError::eHeapError_Error;
 	}
-	*temp_pData = *(T*)pData;
+	*temp_pData = *(T *)pData;
 
-	T** temp = nullptr;
-	if (pHeap->current_size == 0) {
-		temp = (T**)calloc(1, sizeof(T**));
+	T **temp = nullptr;
+	if (pHeap->current_size == 0)
+	{
+		temp = (T **)calloc(1, sizeof(T **));
 
-		if (!temp) {
+		if (!temp)
+		{
 			std::cout << MEM_ERR << std::endl;
 			return EHeapError::eHeapError_Error;
 		}
@@ -118,9 +134,10 @@ EHeapError Heap_Push(SHeap<T>* pHeap, void* pData)
 	else
 	{
 		// realloc free old memory
-		temp = (T**)realloc(pHeap->ptr, sizeof(T*) * (pHeap->current_size + 1));
+		temp = (T **)realloc(pHeap->ptr, sizeof(T *) * (pHeap->current_size + 1));
 
-		if (!temp) {
+		if (!temp)
+		{
 			std::cout << MEM_ERR << std::endl;
 			return EHeapError::eHeapError_Error;
 		}
@@ -133,27 +150,32 @@ EHeapError Heap_Push(SHeap<T>* pHeap, void* pData)
 	return EHeapError::eHeapError_Success;
 }
 
-template<typename T>
-bool Heap_IsEmpty(const SHeap<T>* pHeap) {
+template <typename T>
+bool Heap_IsEmpty(const SHeap<T> *pHeap)
+{
 	return (pHeap->current_size == 0);
 }
 
-template<typename T>
-bool Heap_IsFull(const SHeap<T>* pHeap) {
+template <typename T>
+bool Heap_IsFull(const SHeap<T> *pHeap)
+{
 	return (pHeap->current_size == pHeap->max_size);
 }
 
-template<typename T>
-size_t Heap_GetSize(SHeap<T>* pHeap) {
+template <typename T>
+size_t Heap_GetSize(SHeap<T> *pHeap)
+{
 	return pHeap->current_size;
 }
 
-template<typename T>
-void* Heap_PopHead(SHeap<T>** pHeap) {
-	if (Heap_IsEmpty((*pHeap))) {
+template <typename T>
+void *Heap_PopHead(SHeap<T> **pHeap)
+{
+	if (Heap_IsEmpty((*pHeap)))
+	{
 		return nullptr;
 	}
-	T* return_ptr = nullptr;
+	T *return_ptr = nullptr;
 
 	if ((*pHeap)->current_size == 1)
 	{
@@ -163,7 +185,7 @@ void* Heap_PopHead(SHeap<T>** pHeap) {
 		return return_ptr;
 	}
 
-	// Store the minimum value, and remove it from heap 
+	// Store the minimum value, and remove it from heap
 	return_ptr = (*pHeap)->ptr[0];
 	(*pHeap)->ptr[0] = (*pHeap)->ptr[(*pHeap)->current_size - 1];
 	(*pHeap)->current_size--;
@@ -172,23 +194,27 @@ void* Heap_PopHead(SHeap<T>** pHeap) {
 	return return_ptr;
 }
 
-template<typename T>
-EHeapError Heap_Delete(SHeap<T>** pHeap, del_fnc pfnDataDel) {
+template <typename T>
+EHeapError Heap_Delete(SHeap<T> **pHeap, del_fnc pfnDataDel)
+{
 
 	for (size_t i = 0; i < (*pHeap)->current_size; i++)
 	{
-		if (pfnDataDel((*pHeap)->ptr[i]) != 0) {
+		if (pfnDataDel((*pHeap)->ptr[i]) != 0)
+		{
 			return EHeapError::eHeapError_Error;
 		}
 	}
-	delete((*pHeap));
+	delete ((*pHeap));
 	*pHeap = nullptr;
 	return EHeapError::eHeapError_Success;
 }
 
-template<typename T>
-void* Heap_GetHead(const SHeap<T>* pHeap) {
-	if (Heap_IsEmpty(pHeap)) {
+template <typename T>
+void *Heap_GetHead(const SHeap<T> *pHeap)
+{
+	if (Heap_IsEmpty(pHeap))
+	{
 		return nullptr;
 	}
 	return pHeap->ptr[0];
@@ -201,14 +227,14 @@ in the given in the .h file
 // to get index of the parent
 int parent(int i) { return (i - 1) / 2; }
 
-// to get index of left child of node at index i 
+// to get index of left child of node at index i
 int left(int i) { return (2 * i + 1); }
 
-// to get index of right child of node at index i 
+// to get index of right child of node at index i
 int right(int i) { return (2 * i + 2); }
 
-// A utility function to swap two elements 
-void swap(int* x, int* y)
+// A utility function to swap two elements
+void swap(int *x, int *y)
 {
 	int temp = *x;
 	*x = *y;
@@ -216,41 +242,40 @@ void swap(int* x, int* y)
 }
 
 /**
-* function to fix the heap after inserting value
-* @param pHeap    pointer to the pointer of The Heap
-* @return (void)  Returns nothing
-*/
-template<typename T>
-void insert_val(SHeap<T>** pHeap)
+ * function to fix the heap after inserting value
+ * @param pHeap    pointer to the pointer of The Heap
+ * @return (void)  Returns nothing
+ */
+template <typename T>
+void insert_val(SHeap<T> **pHeap)
 {
 	int i = (*pHeap)->current_size - 1;
 
-	// Fix the min heap property if it is violated 
-	while (i != 0 && *(*pHeap)->ptr[parent(i)] > * (*pHeap)->ptr[i])
+	// Fix the min heap property if it is violated
+	while (i != 0 && *(*pHeap)->ptr[parent(i)] > *(*pHeap)->ptr[i])
 	{
 		swap((*pHeap)->ptr[i], (*pHeap)->ptr[parent(i)]);
 		i = parent(i);
 	}
 }
 
-
 /**
-* A recursive method to heapify a subtree with the root at given index
-* This method assumes that the subtrees are already heapified
-* @param pHeap    pointer to The Heap
-* @param i        index to heapify
-* @return (void)  Returns nothing
-*/
-template<typename T>
-void MinHeapify(SHeap<T>* pHeap, int i)
+ * A recursive method to heapify a subtree with the root at given index
+ * This method assumes that the subtrees are already heapified
+ * @param pHeap    pointer to The Heap
+ * @param i        index to heapify
+ * @return (void)  Returns nothing
+ */
+template <typename T>
+void MinHeapify(SHeap<T> *pHeap, int i)
 {
 	int l = left(i);
 	int r = right(i);
 	int smallest = i;
 
-	if (l < pHeap->current_size && *pHeap->ptr[l] < *pHeap->ptr [i])
+	if (l < pHeap->current_size && *pHeap->ptr[l] < *pHeap->ptr[i])
 		smallest = l;
-	if (r < pHeap->current_size && *pHeap->ptr[r] < *pHeap->ptr [smallest])
+	if (r < pHeap->current_size && *pHeap->ptr[r] < *pHeap->ptr[smallest])
 		smallest = r;
 	if (smallest != i)
 	{
@@ -261,13 +286,13 @@ void MinHeapify(SHeap<T>* pHeap, int i)
 
 int main()
 {
-	SHeap<int>* Hptr = Heap_New<int>(10, Heap_cmp);
-	int a = 4; 
-	int b = 2; 
+	SHeap<int> *Hptr = Heap_New<int>(10, Heap_cmp);
+	int a = 4;
+	int b = 2;
 	int c = 1;
 	int d = 9;
 	int e = 3;
-	
+
 	Heap_Push(Hptr, &a);
 	Heap_Push(Hptr, &b);
 	Heap_Push(Hptr, &c);
@@ -283,5 +308,3 @@ int main()
 	Heap_Print(Hptr, print_var);
 	return 0;
 }
-
-

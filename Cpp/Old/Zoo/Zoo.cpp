@@ -14,14 +14,14 @@ int main()
     FarmDog d1 = FarmDog("white & brown", "miao", "erez", true);
     FarmDog d2 = FarmDog("white & black", "wof wof", "alon", false);
 
-    Animal* zoo[] = { &c1, &c2, &d1, &d2 };
+    Animal *zoo[] = {&c1, &c2, &d1, &d2};
 
     cout << "Welcome to my zoo!\nLest meet all the animals:" << endl;
     for (size_t i = 0; i < 4; i++)
     {
         zoo[i]->print();
     }
-    
+
     cout << "\nThe animals are hungry let's feed them!" << endl;
     for (size_t i = 0; i < 4; i++)
     {
@@ -41,4 +41,4 @@ int main()
     {
         zoo[i]->print();
     }
-}   
+}

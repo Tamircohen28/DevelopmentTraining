@@ -10,4 +10,4 @@ Bird::Bird(bool flying) { this->m_flying = flying; }
 
 bool Bird::is_fly() { return this->m_flying; }
 void Bird::fly() { this->m_flying = true; }
-void Bird::land() {	this->m_flying = false; }
+void Bird::land() { this->m_flying = false; }

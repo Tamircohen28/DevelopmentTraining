@@ -11,28 +11,35 @@ using namespace std;
 Animal Class Implentation
 */
 // Constructor
-Animal::Animal(size_t food_level, size_t water_level, bool awake) {
+Animal::Animal(size_t food_level, size_t water_level, bool awake)
+{
     this->m_food_level = food_level;
     this->m_water_level = water_level;
     this->m_awake = awake;
 }
 
-void Animal::add_food(size_t food_quantity) {
+void Animal::add_food(size_t food_quantity)
+{
     // reached max
-    if (this->m_food_level + food_quantity > FOOD_MAX) {
+    if (this->m_food_level + food_quantity > FOOD_MAX)
+    {
         this->m_food_level = FOOD_MAX;
     }
-    else {
+    else
+    {
         this->m_food_level += food_quantity;
     }
 }
 
-void Animal::add_water(size_t water_quantity) {
+void Animal::add_water(size_t water_quantity)
+{
     // reached max
-    if (this->m_water_level + water_quantity > WATER_MAX) {
+    if (this->m_water_level + water_quantity > WATER_MAX)
+    {
         this->m_water_level = WATER_MAX;
     }
-    else {
+    else
+    {
         this->m_water_level += water_quantity;
     }
 }

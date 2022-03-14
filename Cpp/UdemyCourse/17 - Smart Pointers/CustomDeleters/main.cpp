@@ -35,7 +35,7 @@ int main()
         std::shared_ptr<Test> ptr2(new Test{1000},
                                    [](Test *ptr)
                                    {
-                                       std::cout << "\tUsing my custom lamdba deleter" << std::endl;
+                                       std::cout << "\tUsing my custom lambda deleter" << std::endl;
                                        delete ptr;
                                    });
     }

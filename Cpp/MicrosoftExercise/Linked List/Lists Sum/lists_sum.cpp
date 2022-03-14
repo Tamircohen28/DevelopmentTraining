@@ -8,6 +8,36 @@
     @version 1.0 07/03/2022
 */
 
+/*
+https://www.educative.io/m/add-two-integers
+Solution Explanation
+
+Runtime Complexity
+Linear, O(n)
+
+Runtime complexity is based on the length of the linked lists.
+
+Memory Complexity
+Linear, O(n)
+
+
+Solution Breakdown
+For a better understanding of the problem, let’s take a look at an example.
+Suppose we want to add the integers 9901 and 237. The result of this addition would be 10138.
+
+The integers are stored inverted in the linked lists to make the addition easier.
+Now, the most significant digit of the number is the last element of the linked list.
+
+For the addition, we’ll start from the heads of the two linked lists.
+At each iteration, we add the current digits of the two lists and insert a new node
+with the resulting digit at the tail of the result linked list.
+
+We’ll also need to maintain carry at each step.
+We’ll keep doing this for all digits in both the linked lists.
+If one of the linked lists ends sooner, we’ll continue with the other linked list.
+Once both of the linked lists are exhausted, and no carry is left to be added, the algorithm will terminate.
+*/
+
 #include <cstdlib> // required for rand()
 #include <ctime>   // required for time( )
 #include <iostream>

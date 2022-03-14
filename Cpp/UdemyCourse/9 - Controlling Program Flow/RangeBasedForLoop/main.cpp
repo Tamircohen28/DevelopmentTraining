@@ -1,4 +1,4 @@
-// Section 9
+ // Section 9
 // Range-based For Loop
 #include <iostream>
 #include <vector>

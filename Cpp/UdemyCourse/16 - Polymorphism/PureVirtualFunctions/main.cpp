@@ -13,6 +13,11 @@ public:
     virtual ~Shape() {}
 };
 
+void Shape::draw()
+{
+    std::cout << "From shape::draw" << std::endl;
+}
+
 class Open_Shape : public Shape
 { // Abstract class
 public:
@@ -58,6 +63,7 @@ class Square : public Closed_Shape
 public:
     virtual void draw() override
     {
+        Shape::draw();
         std::cout << "Drawing a square" << std::endl;
     }
     virtual void rotate() override
@@ -76,8 +82,8 @@ void screen_refresh(const std::vector<Shape *> &shapes)
 
 int main()
 {
-    //    Shape s;
-    //    Shape *p = new Shape();
+    //    Shape s; <-- Error: can't instantiate Abstract class objects
+    //    Shape *p = new Shape(); <-- Error: can't instantiate Abstract class objects
 
     //        Circle c;
     //        c.draw();

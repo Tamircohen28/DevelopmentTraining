@@ -68,3 +68,41 @@ int main()
     reversWords(str);
     cout << "Str reversed: " << str << endl;
 }
+
+// B
+// https://practice.geeksforgeeks.org/contest/jbmts-microsoft-mock-4-round-13708/problems#
+string reverseWords(string S)
+{
+    string arr{""};
+    string word{""};
+
+    for (int i = 0; i < S.length(); i++)
+    {
+        char c = S.at(i);
+        if (c == '.') // end of word
+        {
+            if (arr.length() > 0)
+            {
+                arr = word + "." + arr;
+            }
+            else
+            {
+                arr = word;
+            }
+            word = "";
+            continue;
+        }
+
+        word += c;
+    }
+
+    // adding the last word
+    if (arr.length() > 0)
+    {
+        return word + "." + arr;
+    }
+    else
+    {
+        return word;
+    }
+}
